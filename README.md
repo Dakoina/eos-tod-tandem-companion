@@ -1,5 +1,7 @@
 # Empire of Storms & Tower of Dawn, a tandem reading companion app
-A Simple PWA tandem read app for Sarah J Maas's Empire of Storms and Tower of Dawn books.
+A Simple PWA tandem reading app for Sarah J Maas's Empire of Storms and Tower of Dawn books. An easy way to track your progress.
+
+This app stores data in your browser, so if you happen to switch browsers or something clears your browsers data, you will of course lose your progress.
 
 ## How to Install on iPhone and Android
 
