@@ -1,4 +1,4 @@
-# eos-tod-tandem-companion
+# Empire of Storms & Tower of Dawn, a tandem reading companion app
 A Simple PWA tandem read app for Sarah J Maas's Empire of Storms and Tower of Dawn books.
 
 ## How to Install on iPhone and Android
