@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>EOS & TOD Reading Companion</title>
     <meta name="theme-color" content="#2d1b69">
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU0pNIFJlYWRpbmcgQ29tcGFuaW9uIiwic2hvcnRfbmFtZSI6IlNKTSBSZWFkZXIiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzJkMWI2OSIsInRoZW1lX2NvbG9yIjoiIzJkMWI2OSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE9USWdNVGt5SWo0OGNtVmpkQ0IzYVdSMGFEMGlNVGt5SWlCb1pXbG5hSFE5SWpFNU1pSWdabWxzYkQwaUl6SXRNV0kyT1NJdlBqeDBaWGgwSUhnOUlqazJJaUI1UFNJeE1qQWlJR1pwYkd3OUluZG9hWFJsSWlCbWIyNTBMV1poYldsc2VUMGlZWEpwWVd3c0lITmhibk10YzJWeWFXWWlJR1p2Ym5RdGMybDZaVDBpTWpCd2VDSWdkR1Y0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0krUWs4OEwzUmxlSFErUEM5emRtYysifSx7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4T1RJZ01Ua3lJajQ4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ1ptbHNiRDBpSXpKa01XSTJPU0l2UGp4MFpYaDBJSGc5SWprMklpQjVQU0l4TWpBaUlHWnBiR3c5SW5kb2FYUmxJaUJtYjI1MExXWmhiV2xzZVQwaVlYSnBZV3dzSUhOaGJuTXRjMlZ5YVdZaUlHWnZiblF0YzJsNlpUMGlNakJ3ZUNJZ2RHVjRkQzFoYm1Ob2IzSTlJbTFwWkdSc1pTSStRazg4TDNSbGVIUStQQzl6ZG1jKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
@@ -50,7 +50,7 @@
         }
 
         .progress-section {
-            padding: 20px;
+            padding: 10px 20px;
             background: #f8f9ff;
         }
 
@@ -122,7 +122,7 @@
         }
 
         .current-chapter-hint {
-            font-size: 12px;
+            font-size: 10px;
             color: #6b7280;
             margin-bottom: 15px;
         }
@@ -145,18 +145,18 @@
         }
 
         .current-chapter.eos {
-            background: linear-gradient(135deg, #2d1b69 0%, #1e1b4b 100%);
+            background: #2d1b69 0%;
         }
 
         .current-chapter.tod {
-            background: linear-gradient(135deg, #11998e 0%, #0d7377 100%);
+            background: #11998e 0%;
         }
 
         .chapter-list {
             margin: 0 20px 20px;
             max-height: 300px;
             overflow-y: auto;
-            border: 1px solid #e5e7eb;
+        
             border-radius: 15px;
             background: white;
         }
@@ -174,12 +174,12 @@
         }
 
         .chapter-item.eos {
-            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            background: #BEB0EB;
             border-left: 4px solid #2d1b69;
         }
 
         .chapter-item.tod {
-            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            background: #96EBC0;
             border-left: 4px solid #11998e;
         }
 
@@ -187,6 +187,24 @@
             text-decoration: line-through;
             opacity: 0.6;
             background-color: #f9fafb;
+        }
+
+        .chapter-item.current {
+            outline: 2px solid #2d1b69;
+            background: linear-gradient(90deg, #f3e8ff 0%, #e0e7ff 100%);
+            box-shadow: 0 2px 8px rgba(45,27,105,0.08);
+            z-index: 1;
+        }
+
+        .chapter-item.current.eos {
+            background: linear-gradient(135deg, #2d1b69 0%, #1e1b4b 100%) !important;
+            color: #fff;
+            outline: 0 solid #2d1b69;
+        }
+        .chapter-item.current.tod {
+            background: linear-gradient(135deg, #11998e 0%, #0d7377 100%) !important;
+            color: #fff;
+            outline: 0px solid #11998e;
         }
 
         .chapter-number {
@@ -294,14 +312,13 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-            /*{ margin: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: bold;
-        } */
+
+        .about-section {
+            padding: 10px 20px;
+            background: #f8f9ff;
+            font-size: 12px; color: #6b7280;
+        }
+
     </style>
 </head>
 <body>
@@ -347,7 +364,7 @@
         </div>
 
         <div class="current-chapter-section">
-            <div class="current-chapter-label">Currently reading:</div>
+            <div class="current-chapter-label">CURRENT CHAPTER:</div>
             <div class="current-chapter-hint">Click on the chapter to progress to the next chapter</div>
             <button class="current-chapter" id="current-chapter">
                 Click to start reading!
@@ -363,6 +380,14 @@
         </div>
 
         <div class="chapter-list" id="chapter-list"></div>
+
+        
+        <div class="about-section" style="text-align: center;">
+            I ❤️ reading Sarah J. Maas's books and this app is a small gift from me to the other fans! No affiliation. Enjoy reading!<br><br>
+            You can install this app on your mobile device by adding it to your home screen. More documentation can be found <a href="https://github.com/Dakoina/eos-tod-tandem-companion/blob/main/README.md" target="_blank" style="color: #2d1b69; text-decoration: underline;">here</a>.
+            If you have any feedback or suggestions, feel free to reach out via github!<br><br>
+            Created by <a href="https://github.com/Dakoina" target="_blank" style="color: #2d1b69; text-decoration: underline;">Dakoina</a>.
+        </div>
 
         <button class="reset-button" onclick="showResetModal()">Reset Progress</button>
     </div>
@@ -603,7 +628,8 @@
             const currentIndex = getCurrentChapterIndex();
             
             if (currentChapter) {
-                currentChapterButton.textContent = currentChapter.chapter;
+                // Add open book emoji to current chapter button
+                currentChapterButton.textContent = '📖 ' + currentChapter.chapter;
                 currentChapterButton.className = `current-chapter ${currentChapter.book.toLowerCase()}`;
                 currentChapterButton.onclick = () => markChapterAsRead(currentChapter.order);
                 
@@ -628,22 +654,35 @@
             }
         }
 
-        // Render chapter list
+        // Render chapter list and scroll current chapter into view
         function renderChapterList() {
             const chapterList = document.getElementById('chapter-list');
             chapterList.innerHTML = '';
+            let currentIndex = getCurrentChapterIndex();
+            let currentChapterElement = null;
 
             chapters.forEach((chapter, index) => {
                 const chapterElement = document.createElement('div');
-                chapterElement.className = `chapter-item ${chapter.book.toLowerCase()} ${chapter.read ? 'read' : ''}`;
-                
+                chapterElement.className = `chapter-item ${chapter.book.toLowerCase()} ${chapter.read ? 'read' : ''}${index === currentIndex ? ' current' : ''}`;
                 chapterElement.innerHTML = `
                     <div class="chapter-number">${chapter.order + 1}</div>
                     <div class="chapter-title">${chapter.chapter}</div>
                 `;
-                
+                if (index === currentIndex) {
+                    currentChapterElement = chapterElement;
+                }
                 chapterList.appendChild(chapterElement);
             });
+
+            // Scroll current chapter into center view if possible
+            if (currentChapterElement) {
+                setTimeout(() => {
+                    currentChapterElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 0);
+            }
         }
 
         // Navigation functions
