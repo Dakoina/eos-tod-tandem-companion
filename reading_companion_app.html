@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOS & TOD Reading Companion</title>
+    <meta name="theme-color" content="#2d1b69">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU0pNIFJlYWRpbmcgQ29tcGFuaW9uIiwic2hvcnRfbmFtZSI6IlNKTSBSZWFkZXIiLCJzdGFydF91cmwiOiIvIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzJkMWI2OSIsInRoZW1lX2NvbG9yIjoiIzJkMWI2OSIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE9USWdNVGt5SWo0OGNtVmpkQ0IzYVdSMGFEMGlNVGt5SWlCb1pXbG5hSFE5SWpFNU1pSWdabWxzYkQwaUl6SXRNV0kyT1NJdlBqeDBaWGgwSUhnOUlqazJJaUI1UFNJeE1qQWlJR1pwYkd3OUluZG9hWFJsSWlCbWIyNTBMV1poYldsc2VUMGlZWEpwWVd3c0lITmhibk10YzJWeWFXWWlJR1p2Ym5RdGMybDZaVDBpTWpCd2VDSWdkR1Y0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0krUWs4OEwzUmxlSFErUEM5emRtYysifSx7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0F4T1RJZ01Ua3lJajQ4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ1ptbHNiRDBpSXpKa01XSTJPU0l2UGp4MFpYaDBJSGc5SWprMklpQjVQU0l4TWpBaUlHWnBiR3c5SW5kb2FYUmxJaUJtYjI1MExXWmhiV2xzZVQwaVlYSnBZV3dzSUhOaGJuTXRjMlZ5YVdZaUlHWnZiblF0YzJsNlpUMGlNakJ3ZUNJZ2RHVjRkQzFoYm1Ob2IzSTlJbTFwWkdSc1pTSStRazg4TDNSbGVIUStQQzl6ZG1jKyIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .app-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 90vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
+            color: white;
+            padding: 30px 20px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-section {
+            padding: 20px;
+            background: #f8f9ff;
+        }
+
+        .progress-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .progress-circle svg {
+            width: 80px;
+            height: 80px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle .bg {
+            fill: none;
+            stroke: #e0e7ff;
+            stroke-width: 8;
+        }
+
+        .progress-circle .progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dasharray 0.3s ease;
+        }
+
+        .total-progress { stroke: #667eea; }
+        .eos-progress { stroke: #2d1b69; }
+        .tod-progress { stroke: #11998e; }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .current-chapter-section {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .current-chapter-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .current-chapter-hint {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .current-chapter {
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: bold;
+            color: white;
+            border: none;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .current-chapter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .current-chapter.eos {
+            background: linear-gradient(135deg, #2d1b69 0%, #1e1b4b 100%);
+        }
+
+        .current-chapter.tod {
+            background: linear-gradient(135deg, #11998e 0%, #0d7377 100%);
+        }
+
+        .chapter-list {
+            margin: 0 20px 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 15px;
+            background: white;
+        }
+
+        .chapter-item {
+            padding: 15px;
+            border-bottom: 1px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .chapter-item:last-child {
+            border-bottom: none;
+        }
+
+        .chapter-item.eos {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            border-left: 4px solid #2d1b69;
+        }
+
+        .chapter-item.tod {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+            border-left: 4px solid #11998e;
+        }
+
+        .chapter-item.read {
+            text-decoration: line-through;
+            opacity: 0.6;
+            background-color: #f9fafb;
+        }
+
+        .chapter-number {
+            font-size: 12px;
+            color: #6b7280;
+            min-width: 30px;
+            margin-right: 10px;
+        }
+
+        .chapter-title {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .reset-button {
+            margin: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            width: calc(100% - 40px);
+            transition: transform 0.2s ease;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 300px;
+            margin: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .confirm-button {
+            background: #dc2626;
+            color: white;
+        }
+
+        .cancel-button {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #374151;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-button:hover {
+            border-color: #9ca3af;
+            background: #f9fafb;
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+            /*{ margin: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+        } */
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="title">Empire of Storms & Tower of Dawn, by Sarah J. Maas</div>
+            <div class="subtitle">A Tandem Reading Companion</div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-row">
+                <div class="progress-item">
+                    <div class="progress-circle">
+                        <svg>
+                            <circle class="bg" cx="40" cy="40" r="36"></circle>
+                            <circle class="progress total-progress" cx="40" cy="40" r="36" id="total-progress"></circle>
+                        </svg>
+                        <div class="progress-text" id="total-text">0%</div>
+                    </div>
+                    <div class="progress-label">Total</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-circle">
+                        <svg>
+                            <circle class="bg" cx="40" cy="40" r="36"></circle>
+                            <circle class="progress eos-progress" cx="40" cy="40" r="36" id="eos-progress"></circle>
+                        </svg>
+                        <div class="progress-text" id="eos-text">0%</div>
+                    </div>
+                    <div class="progress-label">EOS</div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-circle">
+                        <svg>
+                            <circle class="bg" cx="40" cy="40" r="36"></circle>
+                            <circle class="progress tod-progress" cx="40" cy="40" r="36" id="tod-progress"></circle>
+                        </svg>
+                        <div class="progress-text" id="tod-text">0%</div>
+                    </div>
+                    <div class="progress-label">TOD</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="current-chapter-section">
+            <div class="current-chapter-label">Currently reading:</div>
+            <div class="current-chapter-hint">Click on the chapter to progress to the next chapter</div>
+            <button class="current-chapter" id="current-chapter">
+                Click to start reading!
+            </button>
+            <div class="navigation-buttons">
+                <button class="nav-button" id="prev-button" onclick="goToPreviousChapter()">← Previous</button>
+                <button class="nav-button" id="next-button" onclick="goToNextChapter()">Next →</button>
+            </div>
+        </div>
+
+        <div id="completed-message" class="completed-message" style="display: none;">
+            🎉 Congratulations! You've completed both books! 🎉
+        </div>
+
+        <div class="chapter-list" id="chapter-list"></div>
+
+        <button class="reset-button" onclick="showResetModal()">Reset Progress</button>
+    </div>
+
+    <div class="modal" id="reset-modal">
+        <div class="modal-content">
+            <h3>Reset Progress</h3>
+            <p>Are you sure you want to reset all progress? This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-button cancel-button" onclick="hideResetModal()">Cancel</button>
+                <button class="modal-button confirm-button" onclick="resetProgress()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chapter data
+        const chapters = [
+            {order: 0, book: "EOS", chapter: "Empire of Storms - NIGHTFALL", read: false},
+            {order: 1, book: "EOS",chapter: "Empire of Storms -   Chapter 1", read: false},
+            {order: 2, book: "EOS", chapter: "Empire of Storms -  Chapter 2", read: false},
+            {order: 3, book: "EOS", chapter: "Empire of Storms -  Chapter 3", read: false},
+            {order: 4, book: "EOS", chapter: "Empire of Storms -  Chapter 4", read: false},
+            {order: 5, book: "EOS", chapter: "Empire of Storms -  Chapter 5", read: false},
+            {order: 6, book: "TOD", chapter: "Tower of Dawn -  Chapter 1", read: false},
+            {order: 7, book: "EOS", chapter: "Empire of Storms -  Chapter 6", read: false},
+            {order: 8, book: "EOS", chapter: "Empire of Storms -  Chapter 7", read: false},
+            {order: 9, book: "EOS", chapter: "Empire of Storms -  Chapter 8", read: false},
+            {order: 10, book: "TOD", chapter: "Tower of Dawn -  Chapter 2", read: false},
+            {order: 11, book: "TOD", chapter: "Tower of Dawn -  Chapter 3", read: false},
+            {order: 12, book: "EOS", chapter: "Empire of Storms -  Chapter 9", read: false},
+            {order: 13, book: "EOS", chapter: "Empire of Storms -  Chapter 10", read: false},
+            {order: 14, book: "TOD", chapter: "Tower of Dawn -  Chapter 4", read: false},
+            {order: 15, book: "TOD", chapter: "Tower of Dawn -  Chapter 5", read: false},
+            {order: 16, book: "TOD", chapter: "Tower of Dawn -  Chapter 6", read: false},
+            {order: 17, book: "EOS", chapter: "Empire of Storms -  Chapter 11", read: false},
+            {order: 18, book: "TOD", chapter: "Tower of Dawn -  Chapter 7", read: false},
+            {order: 19, book: "EOS", chapter: "Empire of Storms -  Chapter 12", read: false},
+            {order: 20, book: "EOS", chapter: "Empire of Storms -  Chapter 13", read: false},
+            {order: 21, book: "TOD", chapter: "Tower of Dawn -  Chapter 8", read: false},
+            {order: 22, book: "TOD", chapter: "Tower of Dawn -  Chapter 9", read: false},
+            {order: 23, book: "TOD", chapter: "Tower of Dawn -  Chapter 10", read: false},
+            {order: 24, book: "EOS", chapter: "Empire of Storms -  Chapter 14", read: false},
+            {order: 25, book: "EOS", chapter: "Empire of Storms -  Chapter 15", read: false},
+            {order: 26, book: "EOS", chapter: "Empire of Storms -  Chapter 16", read: false},
+            {order: 27, book: "TOD", chapter: "Tower of Dawn -  Chapter 11", read: false},
+            {order: 28, book: "TOD", chapter: "Tower of Dawn -  Chapter 12", read: false},
+            {order: 29, book: "EOS", chapter: "Empire of Storms -  Chapter 17", read: false},
+            {order: 30, book: "TOD", chapter: "Tower of Dawn -  Chapter 17", read: false},
+            {order: 31, book: "EOS", chapter: "Empire of Storms -  Chapter 20", read: false},
+            {order: 32, book: "EOS", chapter: "Empire of Storms -  Chapter 21", read: false},
+            {order: 33, book: "EOS", chapter: "Empire of Storms -  Chapter 22", read: false},
+            {order: 34, book: "EOS", chapter: "Empire of Storms -  Chapter 23", read: false},
+            {order: 35, book: "TOD", chapter: "Tower of Dawn -  Chapter 18", read: false},
+            {order: 36, book: "TOD", chapter: "Tower of Dawn -  Chapter 19", read: false},
+            {order: 37, book: "TOD", chapter: "Tower of Dawn -  Chapter 20", read: false},
+            {order: 38, book: "TOD", chapter: "Tower of Dawn -  Chapter 21", read: false},
+            {order: 39, book: "EOS", chapter: "Empire of Storms -  Chapter 24", read: false},
+            {order: 40, book: "EOS", chapter: "Empire of Storms -  Chapter 25", read: false},
+            {order: 41, book: "TOD", chapter: "Tower of Dawn -  Chapter 22", read: false},
+            {order: 42, book: "TOD", chapter: "Tower of Dawn -  Chapter 23", read: false},
+            {order: 43, book: "EOS", chapter: "Empire of Storms -  Chapter 26", read: false},
+            {order: 44, book: "TOD", chapter: "Tower of Dawn -  Chapter 24", read: false},
+            {order: 45, book: "EOS", chapter: "Empire of Storms -  Chapter 27", read: false},
+            {order: 46, book: "EOS", chapter: "Empire of Storms -  Chapter 28", read: false},
+            {order: 47, book: "EOS", chapter: "Empire of Storms -  Chapter 29", read: false},
+            {order: 48, book: "TOD", chapter: "Tower of Dawn -  Chapter 25", read: false},
+            {order: 49, book: "TOD", chapter: "Tower of Dawn -  Chapter 26", read: false},
+            {order: 50, book: "TOD", chapter: "Tower of Dawn -  Chapter 27", read: false},
+            {order: 51, book: "TOD", chapter: "Tower of Dawn -  Chapter 28", read: false},
+            {order: 52, book: "EOS", chapter: "Empire of Storms -  Chapter 30", read: false},
+            {order: 53, book: "TOD", chapter: "Tower of Dawn -  Chapter 29", read: false},
+            {order: 54, book: "TOD", chapter: "Tower of Dawn -  Chapter 30", read: false},
+            {order: 55, book: "TOD", chapter: "Tower of Dawn -  Chapter 31", read: false},
+            {order: 56, book: "EOS", chapter: "Empire of Storms -  Chapter 31", read: false},
+            {order: 57, book: "TOD", chapter: "Tower of Dawn -  Chapter 32", read: false},
+            {order: 58, book: "EOS", chapter: "Empire of Storms -  Chapter 32", read: false},
+            {order: 59, book: "TOD", chapter: "Tower of Dawn -  Chapter 33", read: false},
+            {order: 60, book: "TOD", chapter: "Tower of Dawn -  Chapter 34", read: false},
+            {order: 61, book: "TOD", chapter: "Tower of Dawn -  Chapter 35", read: false},
+            {order: 62, book: "EOS", chapter: "Empire of Storms -  Chapter 33", read: false},
+            {order: 63, book: "EOS", chapter: "Empire of Storms -  Chapter 34", read: false},
+            {order: 64, book: "EOS", chapter: "Empire of Storms -  Chapter 35", read: false},
+            {order: 65, book: "EOS", chapter: "Empire of Storms -  Chapter 36", read: false},
+            {order: 66, book: "EOS", chapter: "Empire of Storms -  Chapter 37", read: false},
+            {order: 67, book: "EOS", chapter: "Empire of Storms -  Chapter 38", read: false},
+            {order: 68, book: "EOS", chapter: "Empire of Storms -  Chapter 39", read: false},
+            {order: 69, book: "EOS", chapter: "Empire of Storms -  Chapter 40", read: false},
+            {order: 70, book: "EOS", chapter: "Empire of Storms -  Chapter 41", read: false},
+            {order: 71, book: "EOS", chapter: "Empire of Storms -  Chapter 42", read: false},
+            {order: 72, book: "EOS", chapter: "Empire of Storms -  Chapter 43", read: false},
+            {order: 73, book: "EOS", chapter: "Empire of Storms -  Chapter 44", read: false},
+            {order: 74, book: "EOS", chapter: "Empire of Storms -  Chapter 45", read: false},
+            {order: 75, book: "EOS", chapter: "Empire of Storms -  Chapter 46", read: false},
+            {order: 76, book: "EOS", chapter: "Empire of Storms -  Chapter 47", read: false},
+            {order: 77, book: "EOS", chapter: "Empire of Storms -  Chapter 48", read: false},
+            {order: 78, book: "EOS", chapter: "Empire of Storms -  Chapter 49", read: false},
+            {order: 79, book: "EOS", chapter: "Empire of Storms -  Chapter 50", read: false},
+            {order: 80, book: "EOS", chapter: "Empire of Storms -  Chapter 51", read: false},
+            {order: 81, book: "TOD", chapter: "Tower of Dawn -  Chapter 36", read: false},
+            {order: 82, book: "TOD", chapter: "Tower of Dawn -  Chapter 37", read: false},
+            {order: 83, book: "EOS", chapter: "Empire of Storms -  Chapter 52", read: false},
+            {order: 84, book: "TOD", chapter: "Tower of Dawn -  Chapter 38", read: false},
+            {order: 85, book: "TOD", chapter: "Tower of Dawn -  Chapter 39", read: false},
+            {order: 86, book: "TOD", chapter: "Tower of Dawn -  Chapter 40", read: false},
+            {order: 87, book: "EOS", chapter: "Empire of Storms -  Chapter 53", read: false},
+            {order: 88, book: "TOD", chapter: "Tower of Dawn -  Chapter 41", read: false},
+            {order: 89, book: "TOD", chapter: "Tower of Dawn -  Chapter 42", read: false},
+            {order: 90, book: "EOS", chapter: "Empire of Storms -  Chapter 54", read: false},
+            {order: 91, book: "EOS", chapter: "Empire of Storms -  Chapter 55", read: false},
+            {order: 92, book: "EOS", chapter: "Empire of Storms -  Chapter 56", read: false},
+            {order: 93, book: "TOD", chapter: "Tower of Dawn -  Chapter 43", read: false},
+            {order: 94, book: "EOS", chapter: "Empire of Storms -  Chapter 57", read: false},
+            {order: 95, book: "EOS", chapter: "Empire of Storms -  Chapter 58", read: false},
+            {order: 96, book: "EOS", chapter: "Empire of Storms -  Chapter 59", read: false},
+            {order: 97, book: "TOD", chapter: "Tower of Dawn -  Chapter 44", read: false},
+            {order: 98, book: "TOD", chapter: "Tower of Dawn -  Chapter 45", read: false},
+            {order: 99, book: "TOD", chapter: "Tower of Dawn -  Chapter 46", read: false},
+            {order: 100, book: "TOD", chapter: "Tower of Dawn -  Chapter 47", read: false},
+            {order: 101, book: "TOD", chapter: "Tower of Dawn -  Chapter 48", read: false},
+            {order: 102, book: "EOS", chapter: "Empire of Storms -  Chapter 60", read: false},
+            {order: 103, book: "EOS", chapter: "Empire of Storms -  Chapter 61", read: false},
+            {order: 104, book: "TOD", chapter: "Tower of Dawn -  Chapter 49", read: false},
+            {order: 105, book: "TOD", chapter: "Tower of Dawn -  Chapter 50", read: false},
+            {order: 106, book: "TOD", chapter: "Tower of Dawn -  Chapter 51", read: false},
+            {order: 107, book: "EOS", chapter: "Empire of Storms -  Chapter 62", read: false},
+            {order: 108, book: "EOS", chapter: "Empire of Storms -  Chapter 63", read: false},
+            {order: 109, book: "TOD", chapter: "Tower of Dawn -  Chapter 52", read: false},
+            {order: 110, book: "TOD", chapter: "Tower of Dawn -  Chapter 53", read: false},
+            {order: 111, book: "EOS", chapter: "Empire of Storms -  Chapter 64", read: false},
+            {order: 112, book: "EOS", chapter: "Empire of Storms -  Chapter 65", read: false},
+            {order: 113, book: "TOD", chapter: "Tower of Dawn -  Chapter 54", read: false},
+            {order: 114, book: "TOD", chapter: "Tower of Dawn -  Chapter 55", read: false},
+            {order: 115, book: "TOD", chapter: "Tower of Dawn -  Chapter 56", read: false},
+            {order: 116, book: "EOS", chapter: "Empire of Storms -  Chapter 66", read: false},
+            {order: 117, book: "EOS", chapter: "Empire of Storms -  Chapter 67", read: false},
+            {order: 118, book: "TOD", chapter: "Tower of Dawn -  Chapter 57", read: false},
+            {order: 119, book: "EOS", chapter: "Empire of Storms -  Chapter 68", read: false},
+            {order: 120, book: "EOS", chapter: "Empire of Storms -  Chapter 69", read: false},
+            {order: 121, book: "EOS", chapter: "Empire of Storms -  Chapter 70", read: false},
+            {order: 122, book: "EOS", chapter: "Empire of Storms -  Chapter 71", read: false},
+            {order: 123, book: "EOS", chapter: "Empire of Storms -  Chapter 72", read: false},
+            {order: 124, book: "EOS", chapter: "Empire of Storms -  Chapter 73", read: false},
+            {order: 125, book: "EOS", chapter: "Empire of Storms -  Chapter 74", read: false},
+            {order: 126, book: "EOS", chapter: "Empire of Storms -  Chapter 75", read: false},
+            {order: 127, book: "TOD", chapter: "Tower of Dawn -  Chapter 58", read: false},
+            {order: 128, book: "TOD", chapter: "Tower of Dawn -  Chapter 59", read: false},
+            {order: 129, book: "TOD", chapter: "Tower of Dawn -  Chapter 60", read: false},
+            {order: 130, book: "TOD", chapter: "Tower of Dawn -  Chapter 61", read: false},
+            {order: 131, book: "TOD", chapter: "Tower of Dawn -  Chapter 61", read: false},
+            {order: 132, book: "TOD", chapter: "Tower of Dawn -  Chapter 62", read: false},
+            {order: 133, book: "TOD", chapter: "Tower of Dawn -  Chapter 63", read: false},
+            {order: 134, book: "TOD", chapter: "Tower of Dawn -  Chapter 64", read: false},
+            {order: 135, book: "TOD", chapter: "Tower of Dawn -  Chapter 65", read: false},
+            {order: 136, book: "TOD", chapter: "Tower of Dawn -  Chapter 66", read: false},
+            {order: 137, book: "TOD", chapter: "Tower of Dawn -  Chapter 67", read: false},
+            {order: 138, book: "TOD", chapter: "Tower of Dawn -  Chapter 68", read: false},
+            {order: 139, book: "TOD", chapter: "Tower of Dawn -  - FIREHEART", read: false}
+        ];
+
+        // Load saved progress
+        function loadProgress() {
+            const saved = localStorage.getItem('sjm-reading-progress');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                savedData.forEach((savedChapter, index) => {
+                    if (chapters[index]) {
+                        chapters[index].read = savedChapter.read;
+                    }
+                });
+            }
+        }
+
+        // Save progress
+        function saveProgress() {
+            localStorage.setItem('sjm-reading-progress', JSON.stringify(chapters));
+        }
+
+        // Get current chapter index (first unread chapter)
+        function getCurrentChapterIndex() {
+            return chapters.findIndex(chapter => !chapter.read);
+        }
+
+        // Get current chapter (first unread chapter or last read chapter if all complete)
+        function getCurrentChapter() {
+            const unreadIndex = getCurrentChapterIndex();
+            if (unreadIndex !== -1) {
+                return chapters[unreadIndex];
+            }
+            // If all chapters are read, return the last chapter
+            return chapters[chapters.length - 1] || null;
+        }
+
+        // Update progress circles
+        function updateProgress() {
+            const totalChapters = chapters.length;
+            const readChapters = chapters.filter(ch => ch.read).length;
+            const eosTotal = chapters.filter(ch => ch.book === 'EOS').length;
+            const eosRead = chapters.filter(ch => ch.book === 'EOS' && ch.read).length;
+            const todTotal = chapters.filter(ch => ch.book === 'TOD').length;
+            const todRead = chapters.filter(ch => ch.book === 'TOD' && ch.read).length;
+
+            const totalPercent = Math.round((readChapters / totalChapters) * 100);
+            const eosPercent = Math.round((eosRead / eosTotal) * 100);
+            const todPercent = Math.round((todRead / todTotal) * 100);
+
+            updateCircle('total-progress', 'total-text', totalPercent);
+            updateCircle('eos-progress', 'eos-text', eosPercent);
+            updateCircle('tod-progress', 'tod-text', todPercent);
+
+            // Show completion message
+            const completedMessage = document.getElementById('completed-message');
+            if (readChapters === totalChapters) {
+                completedMessage.style.display = 'block';
+            } else {
+                completedMessage.style.display = 'none';
+            }
+        }
+
+        // Update individual progress circle
+        function updateCircle(circleId, textId, percent) {
+            const circle = document.getElementById(circleId);
+            const text = document.getElementById(textId);
+            const circumference = 2 * Math.PI * 36;
+            const offset = circumference - (percent / 100) * circumference;
+            
+            circle.style.strokeDasharray = circumference;
+            circle.style.strokeDashoffset = offset;
+            text.textContent = percent + '%';
+        }
+
+        // Update current chapter display
+        function updateCurrentChapter() {
+            const currentChapter = getCurrentChapter();
+            const currentChapterButton = document.getElementById('current-chapter');
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
+            const currentIndex = getCurrentChapterIndex();
+            
+            if (currentChapter) {
+                currentChapterButton.textContent = currentChapter.chapter;
+                currentChapterButton.className = `current-chapter ${currentChapter.book.toLowerCase()}`;
+                currentChapterButton.onclick = () => markChapterAsRead(currentChapter.order);
+                
+                // Update navigation buttons
+                prevButton.disabled = currentIndex <= 0;
+                
+                if (currentIndex === -1) {
+                    // All chapters completed
+                    nextButton.disabled = true;
+                    currentChapterButton.textContent = 'All chapters completed! 🎉';
+                    currentChapterButton.className = 'current-chapter';
+                    currentChapterButton.onclick = null;
+                } else {
+                    nextButton.disabled = currentIndex >= chapters.length - 1;
+                }
+            } else {
+                currentChapterButton.textContent = 'No chapters available';
+                currentChapterButton.className = 'current-chapter';
+                currentChapterButton.onclick = null;
+                prevButton.disabled = true;
+                nextButton.disabled = true;
+            }
+        }
+
+        // Render chapter list
+        function renderChapterList() {
+            const chapterList = document.getElementById('chapter-list');
+            chapterList.innerHTML = '';
+
+            chapters.forEach((chapter, index) => {
+                const chapterElement = document.createElement('div');
+                chapterElement.className = `chapter-item ${chapter.book.toLowerCase()} ${chapter.read ? 'read' : ''}`;
+                
+                chapterElement.innerHTML = `
+                    <div class="chapter-number">${chapter.order + 1}</div>
+                    <div class="chapter-title">${chapter.chapter}</div>
+                `;
+                
+                chapterList.appendChild(chapterElement);
+            });
+        }
+
+        // Navigation functions
+        function goToPreviousChapter() {
+            const currentIndex = getCurrentChapterIndex();
+            if (currentIndex > 0) {
+                // Mark current chapter as unread and move to previous
+                if (currentIndex < chapters.length) {
+                    chapters[currentIndex].read = false;
+                }
+                // Also mark the previous chapter as unread to make it current
+                chapters[currentIndex - 1].read = false;
+                saveProgress();
+                updateAll();
+            }
+        }
+
+        function goToNextChapter() {
+            const currentIndex = getCurrentChapterIndex();
+            if (currentIndex !== -1 && currentIndex < chapters.length - 1) {
+                // Mark current chapter as read
+                chapters[currentIndex].read = true;
+                saveProgress();
+                updateAll();
+            }
+        }
+        function markChapterAsRead(order) {
+            const chapter = chapters.find(ch => ch.order === order);
+            if (chapter && !chapter.read) {
+                chapter.read = true;
+                saveProgress();
+                updateAll();
+            }
+        }
+
+        // Update all UI elements
+        function updateAll() {
+            updateProgress();
+            updateCurrentChapter();
+            renderChapterList();
+        }
+
+        // Reset progress
+        function resetProgress() {
+            chapters.forEach(chapter => chapter.read = false);
+            saveProgress();
+            updateAll();
+            hideResetModal();
+        }
+
+        // Modal functions
+        function showResetModal() {
+            document.getElementById('reset-modal').style.display = 'flex';
+        }
+
+        function hideResetModal() {
+            document.getElementById('reset-modal').style.display = 'none';
+        }
+
+        // Initialize app
+        function init() {
+            loadProgress();
+            updateAll();
+        }
+
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHsgZXZlbnQud2FpdFVudGlsKHNlbGYuc2tpcFdhaXRpbmcoKSk7IH0pOyBzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZnVuY3Rpb24oZXZlbnQpIHsgZXZlbnQucmVzcG9uZFdpdGgoZmV0Y2goZXZlbnQucmVxdWVzdCkpOyB9KTs=');
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
