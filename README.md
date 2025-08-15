@@ -24,9 +24,11 @@ Could I read them without printing anything? Yes!
 
 Could I make an app because I'm a developer? Yes! 
 
-So I did, but I did not want to bother with servers and databases, and not put too much time into it. That's why I created this app with Claude 4 and ChatGPT 4.1 to see how good they had become. Et voilà! Half a day with some fine tuning here and there and I have a PWA that stores its data inside the browser.
+So I did, but I did not want to bother with servers and databases, and not put too much time into it. That's why I created this app with Claude 4 and ChatGPT 4.1 to see how good they had become. Are they perfect? No! There's still a lot to change, verify, test and improve. But after a couple hours with some fine tuning and changing stuff I have a PWA that stores its data inside the browser.
 
-IS the code perfect? Far from, looking at the css & html! But AI did a good enough job and it works as I wanted 😊
+Is the code perfect? Far from, looking at the css & html! But AI did a good enough job and it works as I wanted 😊
+
+**Note (rant)**: it seems that a lot of people are still ignorant about the "AI label"... it's not that AI generates everything perfectly! I still have to write down my use cases, verify the code, do extensive testing etc.. And yes, than my app post got removed on a "certain" reddit, because people still have weird biases around AI stuff... f'ing get educated! You have no idea how much time pro developers have to put into real development! 
 
 ## How to Install on iPhone and Android
 
